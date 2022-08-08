@@ -1,0 +1,78 @@
+$font-color: #444
+$foreground-color: #2196f3
+$base-container-color: #F9F9F9
+@mixin button
+  background-color: $foreground-color
+  color: #fff
+  outline: none
+  margin: 15px auto
+  padding: 15px 0
+  border: none
+  border-radius: 3px
+  display: block
+  cursor: pointer
+  transition: background-color 0.2s ease-in-out
+  font-size: 1rem
+  &:active
+    background-color: darken($foreground-color,5%) !important
+  &:hover
+    background-color: lighten($foreground-color,5%)
+
+@mixin input
+  $padding: 12px
+  border: 0
+  outline: none
+  padding: $padding
+  margin: 10px 0 15px 0
+  width: calc(100% - #{$padding * 2})
+  background-color: #e0e0e0
+  border-radius: 3px
+  &.readonly
+    color: #666
+
+@mixin btn-post-option
+  margin: 0 5px
+  background-color: $foreground-color
+  color: #fff
+  border-radius: 50%
+  width: 30px
+  height: 30px
+  text-align: center
+  line-height: 30px
+  font-size: 12px
+  display: inline-block
+  cursor: pointer
+  transition: background-color .2s ease-in-out
+  &:hover
+    background-color: lighten($foreground-color,5%)
+  &:active
+    background-color: darken($foreground-color,10%)
+@mixin shadow-ani
+  box-shadow: rgba(0,0,0,.09) 5px 5px 0px
+  &:hover
+    box-shadow: rgba(0,0,0,.09) 7px 7px 0px
+
+@mixin base-container
+  color: #808080
+  background-color: $base-container-color
+  border-radius: 5px
+  @include shadow-ani
+
+@mixin post-username
+  content: ''
+  width: 0
+  height: 0
+  border-top: 5px solid transparent
+  border-bottom: 5px solid transparent
+  border-left: 5px solid #2196f3
+  position: absolute
+  right: -5px
+  top: 50%
+  transform: translateY(-50%)
+@mixin a
+  color: $foreground-color
+  text-decoration: none
+  &:hover
+    text-decoration: underline
+  &:visited
+    color: $foreground-color

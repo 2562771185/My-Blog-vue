@@ -1,0 +1,334 @@
+@import "/src/assets/style/public"
+$small-width: 850px
+@mixin new_post
+  float: right
+  color: $foreground-color
+  display: flex
+  align-items: center
+  cursor: pointer
+  user-select: none
+  &:hover
+    color: darken($foreground-color, 10%)
+  & svg
+    font-size: 12px
+#home-container
+  display: flex
+  width: 75vw
+  justify-content: center
+  margin: 20px auto 0 auto
+  font-size: 15px
+  min-height: calc(100vh - 155px)
+  #content
+    font-size: 15px
+    color: $font-color
+    margin-bottom: 15px
+    width: 80vw
+  #user
+    width: 400px
+    border: 10px
+    box-sizing: border-box
+    padding-top: 16px
+    #user-post
+      padding: 0 35px
+      .user-post-tips-top
+        display: none
+        @media screen and (max-width: $small-width)
+          display: inline
+      .user-post-tips
+        @media screen and (max-width: $small-width)
+          display: none
+      #post-list
+        max-height: 550px
+        overflow: hidden
+        clear: both
+        margin-bottom: 15px
+        @media screen and (max-width: $small-width)
+          transition: max-height .3s ease-in-out
+        ul
+          margin: 5px 0 0 0
+          padding: 0
+          li
+            line-height: 15px
+            font-size: 1rem
+            color: #8a8a8a
+            word-break: break-all
+            border-bottom: dashed 1px #bababa
+            a
+              padding: 10px 0
+              color: #8a8a8a
+              display: inline-block
+              width: 100%
+              &:hover
+                color: $foreground-color
+        .post-list-new
+          @include new_post
+        @media screen and (max-width: $small-width)
+          .post-list-new
+            display: none !important
+        #post-list-title
+          color: $foreground-color
+          display: none
+          align-items: center
+        @media screen and (min-width: $small-width)
+          max-height: 1000px !important
+          #post-list-title
+            display: inline-block !important
+      #show-post
+        visibility: hidden
+        position: absolute
+        & + label
+          color: $foreground-color
+          user-select: none
+          visibility: hidden
+          & span
+            cursor: pointer
+          .user-post-tips
+            pointer-events: none
+          @media screen and (max-width: 300px)
+            .user-post-option
+              display: flex !important
+              flex-direction: column
+              letter-spacing: 2px
+              width: 100%
+              text-align: center
+              float: none
+              margin-bottom: 5px
+          .post-list-new
+            display: none
+            float: right
+            @include new_post
+          @media screen and (max-width: $small-width)
+            visibility: visible
+            .post-list-new
+              display: inline-block
+          &:hover
+            color: darken($foreground-color, 10%)
+        & + label .icon-arrow
+          transition: transform .3s linear
+          transform-origin: 50% 50%
+          transform: rotate(180deg)
+        &:checked + label .icon-arrow
+          transform: rotate(0deg)
+          display: inline-block
+      #show-post:checked ~ #post-list
+        max-height: 0
+    a
+      text-decoration: none
+    .user-panel
+      background-color: #f8f9fa
+      position: relative
+      border-radius: 10px
+      padding-bottom: 15px
+      margin-bottom: 15px
+      transition: box-shadow 0.3s ease-in-out
+      @media screen and (min-width: $small-width) and (min-height: 400px)
+        position: sticky
+        top: 100px
+        overflow-y: auto
+        max-height: calc(100vh - 200px)
+        &::-webkit-scrollbar-track
+          background-color: #E9E9E9
+        &::-webkit-scrollbar
+          width: 10px
+          background-color: #F5F5F5
+        &::-webkit-scrollbar-thumb
+          background-color: #00aaee
+          background-image: -webkit-gradient(linear, 0 0, 0 100%,color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent))
+      &:hover
+        box-shadow: rgba(0,0,0,.09) 7px 7px 0px
+      #user-image
+        overflow: hidden
+        height: 170px
+        img
+          cursor: pointer
+        #user-banner
+          position: relative
+          transform: translate(-50%, -50%)
+          left: 50%
+          top: 50%
+          min-width: 120%
+          height: 120%
+          object-fit: cover
+          object-position: left center
+          transition: opacity .1s ease-in-out
+          opacity: 0
+      #user-avatar
+        $avatar-size: 70px
+        border-radius: 50%
+        border: solid white 2px
+        overflow: hidden
+        height: $avatar-size
+        width: $avatar-size
+        position: absolute
+        top: 130px
+        left: 50%
+        transform: translateX(-50%)
+        background-color: white
+        img
+          height: $avatar-size
+          width: $avatar-size
+          object-fit: cover
+          object-position: left center
+          transition: opacity .1s ease-in-out
+          opacity: 0
+    #user-nickname
+      font-weight: bold
+      font-size: 1.1rem
+    #user-username
+      font-size: .9rem
+      color: rgb(138, 138, 138)
+    #user-nickname, #user-username
+      text-align: center
+#posts
+  position: relative
+  margin: 15px 30px 0 0
+  #void-content
+    text-align: center
+    background-color: white
+    box-shadow: rgba(0, 0, 0, 0.09) 5px 5px 0
+    border-radius: 15px
+    height: calc(100vh - 220px)
+    display: flex
+    justify-content: center
+    align-items: center
+    color: #8d949d
+    font-size: 1.5rem
+    #void-title
+  .post-content
+    .post-avatar
+      width: 30px
+      height: 30px
+      position: absolute
+      right: 25px
+      img
+        width: 100%
+        height: 100%
+        border-radius: 50%
+        object-fit: cover
+        object-position: left center
+        opacity: 0
+        transition: opacity .1s ease-in-out
+  .post-container
+    transition: box-shadow 0.3s ease-in-out
+    @include base-container
+    .post-image
+      height: 150px
+      width: 100%
+      overflow: hidden
+      position: relative
+      border-top-left-radius: 5px
+      border-top-right-radius: 5px
+      img
+        min-height: 100%
+        width: 100%
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%, -50%)
+        transition: transform .5s ease-in-out, opacity .2s ease-in-out
+        opacity: 0
+        cursor: pointer
+    &:hover .post-image img
+      transform: translate(-50%, -50%) scale(1.1)
+  .post
+    word-break: break-all
+    color: #808080
+    background-color: #F9F9F9
+    border-bottom-left-radius: 5px
+    border-bottom-right-radius: 5px
+    padding: 20px
+    margin-bottom: 25px
+    .post-title
+      font-size: 1.5rem
+      margin-bottom: 10px
+      max-width: calc(100% - 40px)
+      a
+        text-decoration: none
+        color: #404040
+        transition: color .2s ease-in-out
+        &:hover
+          color: $foreground-color
+    .post-detail
+      margin: 10px 0
+      span
+        display: inline-block
+        margin-right: 10px
+  .post-footer
+    margin-top: 15px
+    .post-detail
+      flex: 2
+      a
+        transition: color .2s ease-in-out
+        &:hover
+          color: $foreground-color !important
+      a:visited,a
+        color: unset
+        text-decoration: none
+    .footer-more
+      flex: 1
+      justify-content: right
+      text-align: right
+      a.post-more
+        @include button
+        font-size: .9rem
+        display: inline-block
+        text-decoration: none
+        padding: 8px 13px
+        margin: 0
+
+#user-main
+  overflow: hidden
+  width: 320px
+  #user-image
+    margin-bottom: 45px
+  #user-profile-btn
+    margin-top: 10px
+    @include button
+    width: 80%
+    margin-bottom: 0
+    @media screen and (max-width: $small-width)
+      margin-bottom: 15px
+
+@media screen and (max-width: $small-width)
+  #home-container
+    flex-direction: column
+    width: 90vw
+  #content
+    order: 2
+    width: 90vw !important
+    #posts
+      margin: 0 auto
+      width: 80vw!important
+  #user
+    order: 1
+    padding-top: 16px
+    margin: 0 auto 15px auto
+    width: 65vw !important
+#user-main
+  width: unset
+@media screen and (max-width: 480px)
+  #user
+    width: 80vw !important
+  #posts
+    .post-container
+      .post-image
+        height: 100px
+  .post-footer
+    flex-direction: column
+    text-align: center
+    .post-detail
+      width: 100%
+      order: 2
+      margin-top: 10px
+      color: #aeaeae
+    .footer-more
+      order: 1
+      width: 100%
+      justify-content: center
+      text-align: center !important
+      a
+        text-align: center
+        width: 80%
+@media screen and (max-width: 1280px)
+  #home-container
+    width: 90vw

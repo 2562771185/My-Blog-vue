@@ -1,0 +1,81 @@
+$font-color: #444
+$foreground-color: #2196f3
+$background-color: #414141
+$small-width: 410px
+#account-container
+  color: $background-color
+  background: linear-gradient(45deg, rgba(66, 183, 245, 0.8) 0%, rgba(66, 245, 189, 0.4) 100%)
+  width: 100vw
+  height: 100vh
+  position: absolute
+  top: 0
+  left: 0
+  font-size: 15px
+  display: flex
+  flex-direction: row
+  justify-content: center
+  align-items: center
+  font-family: sans-serif
+  #account-content
+    width: 600px
+    border-radius: 5px
+    background-color: white
+    overflow: hidden
+    position: relative
+    height: 520px
+    max-height: 90vh
+    overflow-y: auto
+    transition: height .2s ease-in-out
+    max-width: 90vw
+    box-sizing: border-box
+    a
+      text-decoration: none
+      color: $foreground-color !important
+      &:hover
+        text-decoration: underline
+      &:visited
+        color: unset
+    #account-title
+      font-size: 1.6rem
+      color: $foreground-color
+      margin-bottom: 15px
+    @media screen and (max-width: $small-width)
+      height: 90vh !important
+      width: 90vw
+  .logo
+    $size: 100px
+    position: relative
+    height: $size
+    width: $size
+    border-radius: 50%
+    display: flex
+    justify-content: center
+    align-items: center
+    color: #ffffff
+    font-size: $size / 2
+    animation: jump 1s ease-in-out
+    &.ok
+      background-color: #4caf50
+    &.error
+      background-color: #EE5353
+  #description
+    margin-top: 30px
+    animation: fadeIn .4s ease-in-out
+    #description-title
+      font-size: 1.5rem
+@keyframes jump
+  0%
+    transform: scale(1.5)
+  25%
+    transform: scale(1.1)
+  50%
+    transform: scale(1.2)
+  100%
+    transform: scale(1)
+@keyframes fadeIn
+  0%
+    transform: translateY(20px)
+    opacity: 0
+  100%
+    opacity: 1
+    transform: translateY(0)
