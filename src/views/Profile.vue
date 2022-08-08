@@ -21,7 +21,7 @@
                 更改背景图
               </div>
             </div>
-            <div :style="'background-image: url(\'' + profile.avatar +'\')'" class="edit-container-item header-avatar"
+            <div :style="'background-image: url(\'' + avatarImg +'\')'" class="edit-container-item header-avatar"
                  @click="beforeUpload('avatar_img')">
               <div class="black-mask">
                 <input @change="upload($event,'avatar_img')" v-show="false" ref="avatarIMG" class="file" name="file"
@@ -43,8 +43,8 @@
             <div class="edit-container-item password">
               <span>更改邮箱</span>
               <div id="change-email">
-                <span v-if="profile.email_verified === 0">*您的邮箱还未验证,如果邮箱有误请修改</span>
-                <input class="readonly" v-if="profile.email_verified === 1" type="text" :value="profile.email" readonly>
+                <span v-if="profile.email === 0">*您的邮箱还未验证,如果邮箱有误请修改</span>
+                <input class="readonly" v-if="profile.email === 1" type="text" :value="profile.email" readonly>
                 <input v-else type="text" v-model="email">
                 <button @click="changeEmail">发送验证邮件</button>
               </div>
@@ -139,9 +139,15 @@ export default {
       BlogConfig,
       imgTransform: '555',
       email: null,
-      profile: {},
+      profile: {
+        id: '',
+        account: '',
+        nickname: '',
+        avatar: '',
+        bannerImg: ''
+      },
       isProfileEditorActive: 'disable',
-      bannerImg: null,
+      bannerImg: '',
       avatarImg: null,
       isMe: false,
       page_count: 0,
@@ -175,6 +181,8 @@ export default {
         if (res.code == 200) {
           this.profile = res.data
           this.email = res.data.email
+          this.bannerImg = res.data.bannerImg
+          this.avatarImg = res.data.avatar
           document.title = `${this.profile.nickname} - 个人主页`
           this.$noty.success(res.msg, {
             killer: true
@@ -188,12 +196,12 @@ export default {
     },
     imgError(type) {
       if (type === 'avatar') {
-        this.profile.avatar_img = BlogConfig.defaultAvatar
+        this.profile.avatar = BlogConfig.defaultAvatar
         this.avatarImg = this.profile.avatar
       }
       if (type === 'banner') {
-        this.profile.banner_img = BlogConfig.defaultBanner
-        this.bannerImg = this.profile.banner_img
+        this.profile.bannerImg = BlogConfig.defaultBanner
+        this.bannerImg = this.profile.bannerImg
       }
     },
     //查询该作者的文章
@@ -216,6 +224,10 @@ export default {
       if (!this.isMe) return
       this.$refs.headerEditor.scrollTop = 0
       this.isProfileEditorActive = this.isProfileEditorActive === 'disable' ? 'active' : 'disable'
+      if (this.isProfileEditorActive === 'disable') {
+        //更新到数据库
+        this.updateNickname()
+      }
     },
     beforeUpload(type) {
       if (type === 'banner_img') {
@@ -227,23 +239,31 @@ export default {
     },
     upload(event, type) {
       profileUpload.upload(this, event, type)
-    },
-    async updateNickname() {
-      const res = await this.$post('user/profile', {
-        nickname: this.$refs.nickname.value
-      })
-      if (res.code === 200) {
-        this.profile.nickname = this.$refs.nickname.value
-        document.title = `${this.profile.nickname} - ${this.BlogConfig.blogName}`
-        this.$noty.success(res.msg, {
-          killer: true
-        })
-        await this.setupPost()
+      if (type === 'avatar_img') {
+        this.profile.avatar = this.$store.state.profile.avatar
+        this.avatarImg = this.$store.state.profile.avatar
+        console.log('更新了头像', this.profile.avatar)
       } else {
-        this.$noty.error(res.msg, {
-          killer: true
-        })
+        this.profile.bannerImg = this.$store.state.profile.bannerImg
+        this.bannerImg = this.$store.state.profile.bannerImg
+        console.log('更新了背景图', this.profile.bannerImg)
       }
+
+    },
+    updateNickname() {
+      this.isProfileEditorActive = 'disable'
+      const res = this.$post('user/updateInfo', {
+        nickname: this.$refs.nickname.value,
+        bannerImg: this.bannerImg,
+        avatar: this.avatarImg,
+        account: this.$store.state.profile.account,
+      }, {
+        headers: {
+          Authorization: this.$store.state.token
+        }
+      })
+      this.$message.success('更新完毕！')
+      location.reload()
     },
     async changeEmail() {
       if (this.profile.email_verified === 0) {
@@ -276,18 +296,15 @@ export default {
       })
     },
     async loadProfile() {
-      // console.log(this.$route.query.account)
-      this.bannerImg = BlogConfig.defaultBanner
-      this.avatarImg = BlogConfig.defaultAvatar
       //1、查询个人主页信息
       await this.setupProfile()
       //2、查询此人文章列表
       await this.setupPost()
-    //  3、检查此主页是否是也登陆用户主页
+      //  3、检查此主页是否是也登陆用户主页
       let user = this.$store.state.profile
-      console.log('loadProfile - user',user)
-      console.log('loadProfile - profile',this.profile)
-      if (user.account === this.profile.account){
+      console.log('loadProfile - user', user)
+      console.log('loadProfile - profile', this.profile)
+      if (user.account === this.profile.account) {
         //是本人主页
         this.isMe = true
       }

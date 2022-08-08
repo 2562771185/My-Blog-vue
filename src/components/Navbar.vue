@@ -84,7 +84,8 @@ export default {
       profile: {
         nickname: null,
         account: null,
-        avatar: null
+        avatar: null,
+        bannerImg:null
       }
     }
   },
@@ -93,7 +94,8 @@ export default {
     this.handleResize()
     document.body.style.padding = '74px 0 0 0'
     this.profile = this.$store.state.profile
-    console.log('this.profile',this.profile)
+    // console.log(this.$store.state.profile)
+    // console.log('导航栏初始化：',this.profile)
   },
   beforeDestroy: function () {
     window.removeEventListener('resize', this.handleResize)

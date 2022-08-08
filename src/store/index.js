@@ -15,10 +15,11 @@ export default new Vuex.Store({
     isLogin: false,
     token: '',
     profile: {
-      id:'',
+      id: '',
       account: '',
       nickname: '',
-      avatar: ''
+      avatar: '',
+      bannerImg: ''
     },
     isLoading: false
   },
@@ -26,17 +27,18 @@ export default new Vuex.Store({
     updateLoginState(state) {
       const token = localStorage.getItem(BlogConfig.tokenName)
       // console.log('验证token前: ',state.isLogin)
-      axios.get(BlogConfig.apiURL+`user/checkToken`,{
+      axios.get(BlogConfig.apiURL + `user/checkToken`, {
         headers: { Authorization: token }
-      }).then(res =>{
-        console.log('checkToken:',res)
-        if (res.data.code === 200){
+      }).then(res => {
+        console.log('checkToken:', res)
+        if (res.data.code === 200) {
           state.isLogin = true
           state.profile.account = res.data.data.account
           state.profile.id = res.data.data.id
           state.profile.avatar = res.data.data.avatar
           state.profile.nickname = res.data.data.nickname
-        }else{
+          state.profile.bannerImg = res.data.data.bannerImg
+        } else {
           localStorage.removeItem(BlogConfig.tokenName)
         }
         // console.log('验证token后: ',state.isLogin)
@@ -46,8 +48,8 @@ export default new Vuex.Store({
       const token = localStorage.getItem(BlogConfig.tokenName)
       localStorage.removeItem(BlogConfig.tokenName)
       //删除后端的token
-      axios.get(BlogConfig.apiURL+`user/delToken?token=${token}`).then(res =>{
-        console.log('delToken:',res)
+      axios.get(BlogConfig.apiURL + `user/delToken?token=${token}`).then(res => {
+        console.log('delToken:', res)
       })
     },
     setToken(state, token) {
@@ -59,19 +61,19 @@ export default new Vuex.Store({
     defaultProfile(state) {
       state.profile.account = '未登录'
       state.profile.avatar = BlogConfig.defaultAvatar
-      state.profile.banner_img = BlogConfig.defaultBanner
+      state.profile.bannerImg = BlogConfig.defaultBanner
     },
     setLoadingStatus(state, isLoading) {
       state.isLoading = isLoading
     },
     updateProfileImg(state, options) {
-      if (options.type === 'banner_img') state.profile.banner_img = options.link
+      if (options.type === 'bannerImg') state.profile.bannerImg = options.link
       if (options.type === 'avatar_img') state.profile.avatar = options.link
     },
     updateProfile(state, profile) {
       state.profile = profile
     },
-    getProfile(state){
+    getProfile(state) {
       return state.profile
     }
   },

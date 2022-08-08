@@ -9,7 +9,7 @@
           :visible.sync="visible">
           <el-upload
             drag
-            action="http://localhost:3003/oss/upload"
+            action="http://localhost:3003/oss/uploadlist"
             :before-upload="beforeUploadHandle"
             :on-success="successHandle"
             multiple
@@ -28,7 +28,7 @@
           <!--          </div>-->
           <input @change="updateBanner" v-show="false" ref="bannerIMG" class="file" name="file" type="file"
                  accept="image/png,image/gif,image/jpeg"/>
-          <img :src="bannerIMG" onload="this.style.opacity = 1" />
+          <img :src="bannerIMG" onload="this.style.opacity = 1"/>
         </div>
         <el-button type="primary" @click="openBanner">{{ bannerIMG == '' ? '上传封面图' : '更新封面图' }}</el-button>
 
@@ -42,8 +42,8 @@
             placeholder="请输入文章简介"
             v-model="post.summary">
           </el-input>
-<!--          <span id="hashtag">#简介</span>-->
-<!--          <input v-model="post.summary" id="postedit-summary" maxlength="100" type="text" value="Title">-->
+          <!--          <span id="hashtag">#简介</span>-->
+          <!--          <input v-model="post.summary" id="postedit-summary" maxlength="100" type="text" value="Title">-->
           <div id="postedit-avatar">
             <router-link :to="'/profile/' + post.user.username">
               <img @error="imgError('avatar')" :src="post.user.avatar_img"/>
@@ -148,7 +148,11 @@ export default {
       }
     },
     async setupContent() {
-      const res = await this.$get(`article/edit?id=${this.id.toLowerCase()}`)
+      const res = await this.$get(`article/edit?id=${this.id.toLowerCase()}`, {
+        headers: {
+          Authorization: this.$store.state.token
+        }
+      })
       if (res.code === 200) {
         this.post.title = res.data.title
         this.post.summary = res.data.summary
@@ -161,7 +165,7 @@ export default {
         if (res.data.articleCover !== undefined && res.data.articleCover !== '' && res.data.articleCover !== null) {
           this.bannerIMG = res.data.articleCover
         }
-        console.log("post",this.post)
+        console.log('post', this.post)
         //
         if (this.$store.state.profile.account !== this.post.user.account) {
           console.log(this.$store.state.profile.account)
@@ -207,12 +211,12 @@ export default {
         },
         upload: {
           accept: 'image/jpg, image/jpeg, image/png,image/gif',//规定上传的图片格式
-          url: BlogConfig.apiURL + 'oss/upload',//请求的接口
+          url: BlogConfig.apiURL + 'oss/uploadlist',//请求的接口
           multiple: false,
           fieldName: 'file',
           max: 4 * 1024 * 1024,//上传图片的大小
           //extraData: {'access_token': this.token}, //为 FormData 添加额外的参数
-          linkToImgUrl: BlogConfig.apiURL + 'oss/upload',
+          linkToImgUrl: BlogConfig.apiURL + 'oss/uploadlist',
           filename(name) {
             return name.replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '')
               .replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '')
@@ -233,14 +237,14 @@ export default {
                 type: 'success'
               })
               let imgName = url.substr(url.lastIndexOf('-') + 1)
-              console.log('imgName:',imgName)
+              console.log('imgName:', imgName)
               let succ = {}
               succ[imgName] = url
               //图片回显
               return JSON.stringify({
                 msg,
                 code,
-                data:{
+                data: {
                   errFiles: [],
                   succMap: succ
                   // succMap: {

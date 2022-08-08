@@ -56,7 +56,7 @@
         <div class="user-panel" id="user-main">
           <div id="user-image">
             <img v-viewer id="user-banner" onload="this.style.opacity = 1"
-                 :src="profile.avatar == ''?BlogConfig.defaultBanner:profile.avatar"/>
+                 :src="profile.bannerImg === ''?BlogConfig.defaultBanner:profile.bannerImg"/>
           </div>
           <div id="user-avatar">
             <router-link :to="$store.state.isLogin ?'/profile?account=' + profile.account : '/login'"><img onload="this.style.opacity = 1"
